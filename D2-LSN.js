@@ -108,5 +108,6 @@ index.html
                     console.log("THIS IS THE CATCH CLAUSE", err)
                     loader.classList.add("d-none")
                 })
+
             console.log("this will be executed before the fetch callback")
         }
