@@ -12,39 +12,98 @@
     <button class="btn btn-primary" onclick="loadBooks()">Load Books</button>
     <div class="row">
 
+        <div class="spinner-border text-primary d-none" id="loading" role="status">
+            <span class="sr-only">Loading...</span>
+          </div>
 
         </div>
     </div>
 <script>
-    function loadBooks(){
+    function loadBooks(){ //For the first time this function runs the images will take a will but after the images will load quicker because they have been cached to the API
         console.log("The button has been clicked")
-        //By default the http method is GET, this fetch retrieves data from the APIs
+       const loader = document.getElementById("loading")
+       loader.classList.remove('d-none')
+       // resets the display of row to nothing every time the function is called
+         //By default the http method is GET, this fetch retrieves data from the APIs
+
+         this.setTimeout(() => {
         fetch("https://striveschool-api.herokuapp.com/books") 
-        .then(booksResponse => {// booksResponse contains all the value of the information we just fetched
+        /* default State
+        method: GET
+        header: {} Empty Object
+        body: Undefined
+        */
+        .then(booksResponse => {// booksResponse contains all the value of the information we have just fetched from the APIs
+           
+       
             console.log("This is the FULL RESPONSE", booksResponse)
-            return booksResponse.json()}) //Transforms the response body into a JSON object J.S.O.N = Javascript Object Notations
+            return booksResponse.json()}) //Transforms the response body/Data into a JSON object J.S.O.N = Javascript Object Notations
         .then(books => {// books is passed the value of what was returned in the previous .then which is booksResponse.json()
             // console.log("This is the body as a JSON", books) 
+            
             const row = document.querySelector('.row')
-            for(let i = 0; i < books.length; i++){ //Iterates through the object of books and adds each one to the page
-                    const book = books[i]
-                    const bookDiv = document.createElement('div')
+            row.innerText =""
+            renderBooks(books,0)
+            // for(let i = 0; i < books.length; i++){ //Iterates through the object of books and adds each one to the page
+                    // const book = books[i]  
+                    // const bookDiv = document.createElement('div')
+                    // bookDiv.classList.add('col')
+                    // bookDiv.classList.add('col-md-3')
+                    // const img = document.createElement('img')
+                    // img.src = book.img
+                    // img.classList.add('img-fluid')
+                    // img.addEventListener('load',() =>{ })
+                    // bookDiv.appendChild(img)
+                    // row.appendChild(bookDiv) 
+
+            // }
+
+            /*
+            try {
+                //Executed as regular code
+            }
+
+            catch(e){
+                //handle Exception
+            }
+
+            finally {
+                //In any case, closing database connection
+            }
+            */
+             loader.classList.add('d-none')
+
+            }) //Use the data
+            .catch(err => { // parameter can be anything in this case it means when an err (error) occurs do this
+                const row = document.querySelector('.row')
+                row.innerText = "Cannot load the books list"
+                console.log('THIS IS THE CATCH CLAUSE', err)
+                loader.classList.add('none')
+            })
+        // .then(booksResponse => console.log(booksResponse)) // This console.logs the response we get after fetching from the link above
+        console.log("This will be executed before the fetch callback")
+    },3000);
+    }
+
+    function renderBooks(books, index){ //Rendering one book at a time, rendering the next book only when the one before it has been loaded
+        const row = document.querySelector('.row')
+        const bookDiv = document.createElement('div')
+        const book = books[index]
+
                     bookDiv.classList.add('col')
+                    bookDiv.classList.add('col-12')
                     bookDiv.classList.add('col-md-3')
                     const img = document.createElement('img')
                     img.src = book.img
                     img.classList.add('img-fluid')
+                    img.addEventListener('load',() =>{ 
+                        if (index + 1 < books.length){renderBooks(books, index + 1 ) }
+                    })
                     bookDiv.appendChild(img)
-                    row.appendChild(bookDiv)
-
-            }
-            }) //Use the data
-        // .then(booksResponse => console.log(booksResponse)) // This console.logs the response we get after fetching from the link above
-        console.log("This will be executed before the fetch callback")
-        
+                    row.appendChild(bookDiv)    
     }
+   
 </script>
-
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
 </body>
