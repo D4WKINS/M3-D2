@@ -4,7 +4,7 @@ let error = false
 
  function searchDeezer(query){
 
-    fetch("https://deezerdevs-deezer.p.rapidapi.com/search?q=" + query, { //when a url contains search this means you have access to all data 
+    fetch("https://deezerdevs-deezer.p.rapidapi.com/search?q=" + query, { //when a url contains the word search this means you have access to all data 
           "method": "GET",
           "headers": {
             "x-rapidapi-key": "5d5e5bfd13msh98b7a74737a2158p15c5fejsnaf6fcce44748",

@@ -1,55 +1,49 @@
 
-let albums = []
-let error = false
 
- function searchDeezer(query){
-
-    fetch("https://deezerdevs-deezer.p.rapidapi.com/search?q=" + query, {
-          "method": "GET",
-          "headers": {
-            "x-rapidapi-key": "5d5e5bfd13msh98b7a74737a2158p15c5fejsnaf6fcce44748",
-            "x-rapidapi-host": "deezerdevs-deezer.p.rapidapi.com"
-          }
-        })
-        .then((response) => response.json()) //Converted to JSON object
-        .then((data) => {
-
-          if(data.data){
-            const obj = { title: query, albums:data.data }
-            albums.push(obj)
-            console.log(albums)
-            return data
-          }else{
-            error = true
-          }
-        })
-        .then((data)=>{
-          let lists = document.getElementById("lists")
-            // lists.innerHTML +=x
-            //  `
-            //  <ul class ="">
-            //  <img class="img-fluid" src=${data.img}>
-            //  <li>${data.name}<li>
-            //  <li>${data}</li>
-             
-            //  </ul>
-            // `
+let content = document.getElementById("albums")
+let row = document.querySelector(".titleMobileHomePage .row")
+const artists = ["Metallica","Behemoth","Eminem"]
 
 
-        })
-        .catch((err) => {
-          console.log("rejected");
-          console.error(err)
-          error = true
-        });
+window.onload =()=>{
+  getAlbums(artists)
+}
 
-  }
+const getAlbums = (query) =>{
+  query.forEach(artist => { // 3 times
+    fetch("https://striveschool-api.herokuapp.com/api/deezer/search?q=" + artist)
+  .then(response => response.json())
+  .then(data => data.data)
+  .then( albums=> {
+    CreateAlbumList(artist,AlbumImg(albums))
+  })
+});
+}
 
-  window.onload = () =>{
-    searchDeezer("Eminem")
-    searchDeezer("Metallica")
-    searchDeezer("Behemoth")
 
-  }
+function CreateAlbumList(name,covers){
+content.innerHTML+= `
+    <h3 class="marginTop titleMobileHomepage">${name}</h3>
+    <div class="row mb-3 text-center " >
+      ${covers}
+      </div>
+      </div>
+      `
 
+}
+
+
+function AlbumImg(albums){ 
+  console.log(albums)
+  albums.forEach(song=> // 25 times for each song
+` <div class="col col-12 col-sm-6 col-md-4 col-lg-2 p-2">
+    <img
+      src="${song.album.cover}"
+      class="img-fluid mb-1 homePageImage"
+      alt=""
+    />
+    <p class="mt-2 font-weight-bold">${song.title}</p>
+  </div>
+  `)
+}
 
