@@ -1,32 +1,28 @@
 
 
 let content = document.getElementById("albums")
-
 const artists = ["Metallica","Behemoth","Eminem"]
-
-
 window.onload = () =>{
   getAlbums(artists)
+
+ 
 }
 
 const getAlbums = async (query) => {
   query.forEach(artist => { // Fetch, display, repeat!
-  fetch("https://striveschool-api.herokuapp.com/api/deezer/search?q=" + artist)
-  const response = await response.json();
-  const data = await data.data;
+   fetch("https://striveschool-api.herokuapp.com/api/deezer/search?q=" + artist)
+  const response = await response.json()
+  const data = await data.data
+   try{
+    createAlbumList(artist,AlbumImg(data))
+   }
 
-  try {
-      createAlbumList(artist,AlbumImg(albums))
-   }
-   catch(err){
-     return console.error(err)
-   }
-   finally{
-    console("Task Finished!")
-   }
- 
-  }
+    catch(err){
+      return console.error("Something F'd Up!",err)
+    }
+})
 }
+
 
 
 function CreateAlbumList(name,covers){
