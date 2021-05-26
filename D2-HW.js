@@ -1,7 +1,7 @@
 
 
 let content = document.getElementById("albums")
-const artists = ["Metallica","Behemoth","Eminem"]
+const artists = ["Linkin Park","Metallica","Behemoth","Eminem",""]
 window.onload = () =>{
   getAlbums(artists)
 
@@ -9,17 +9,20 @@ window.onload = () =>{
 }
 
 const getAlbums = async (query) => {
-  query.forEach(artist => { // Fetch, display, repeat!
-   fetch("https://striveschool-api.herokuapp.com/api/deezer/search?q=" + artist)
-  const response = await response.json()
-  const data = await data.data
-   try{
-    createAlbumList(artist,AlbumImg(data))
+  query.forEach( async artist => { // Fetch, display, repeat!
+    try{// attempts to run
+      let getData = await fetch("https://striveschool-api.herokuapp.com/api/deezer/search?q=" + artist)
+      const response = await getData.json()
+      const data = await response.data
+    CreateAlbumList(artist,AlbumImg(data))
    }
-
-    catch(err){
+    catch(err){// if an error occurs an error msg is executed
       return console.error("Something F'd Up!",err)
     }
+    finally{// Finally is executed whether their is an error or not
+      console.log("Finish")
+    }
+  
 })
 }
 
